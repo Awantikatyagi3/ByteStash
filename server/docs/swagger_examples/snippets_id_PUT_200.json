@@ -1,0 +1,59 @@
+{
+  "http-request": {
+    "method": "PUT",
+    "path": "/api/snippets/1",
+    "headers": {
+      "Content-Type": "application/json",
+      "bytestashauth": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc4NTE1NTEzMn0.FD8iGkwbM3wWQZ791TEcO5Toj2e_ueEFj7aMlA-ln34"
+    },
+    "body": {
+      "title": "Hello Updated",
+      "description": "My first updated snippet",
+      "is_public": 1,
+      "categories": [
+        "tutorial",
+        "updated"
+      ],
+      "fragments": [
+        {
+          "file_name": "hello.js",
+          "code": "console.log('Hello Updated World');",
+          "language": "javascript",
+          "position": 0
+        }
+      ]
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 1,
+      "title": "Hello Updated",
+      "description": "My first updated snippet",
+      "user_id": 1,
+      "username": "testuser",
+      "is_public": 1,
+      "is_pinned": 0,
+      "is_favorite": 0,
+      "expiry_date": null,
+      "categories": [
+        "tutorial",
+        "updated"
+      ],
+      "fragments": [
+        {
+          "id": 1,
+          "file_name": "hello.js",
+          "code": "console.log('Hello Updated World');",
+          "language": "javascript",
+          "position": 0
+        }
+      ],
+      "updated_at": "2026-07-24T14:10:50.000Z",
+      "share_count": 0
+    }
+  }
+}

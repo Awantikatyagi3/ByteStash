@@ -1,0 +1,30 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/mcp",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "x-api-key": "OXPQD"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "initialize",
+      "params": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {},
+        "clientInfo": {
+          "name": "specmatic",
+          "version": "1.0.0"
+        }
+      }
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

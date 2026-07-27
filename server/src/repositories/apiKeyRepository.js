@@ -6,6 +6,23 @@ function generateApiKey() {
   return crypto.randomBytes(32).toString('hex');
 }
 
+// Normalization boundary for all ApiKey entities returned to callers.
+// Mirrors the #processSnippet() / #processShare() pattern used elsewhere in
+// the repository layer. Ensures is_active is always a JavaScript boolean
+// regardless of whether the value originates from a synthetic object literal
+// (createApiKey) or a raw better-sqlite3 row (getApiKeys).
+function processApiKey(apiKey) {
+  if (!apiKey) return null;
+  return {
+    id: apiKey.id,
+    ...(apiKey.key !== undefined && { key: apiKey.key }),
+    name: apiKey.name,
+    created_at: apiKey.created_at,
+    last_used_at: apiKey.last_used_at ?? null,
+    is_active: !!apiKey.is_active,
+  };
+}
+
 export function createApiKey(userId, name) {
   const db = getDb();
   const key = generateApiKey();
@@ -20,13 +37,14 @@ export function createApiKey(userId, name) {
     
     if (result.changes === 1) {
       Logger.debug(`Created new API key for user ${userId}`);
-      return {
+      return processApiKey({
         id: result.lastInsertRowid,
         key,
         name,
         created_at: new Date().toISOString(),
-        is_active: true
-      };
+        last_used_at: null,
+        is_active: true,
+      });
     }
     return null;
   } catch (error) {
@@ -45,7 +63,7 @@ export function getApiKeys(userId) {
       ORDER BY created_at DESC
     `);
     
-    return stmt.all(userId);
+    return stmt.all(userId).map(processApiKey);
   } catch (error) {
     Logger.error('Error fetching API keys:', error);
     throw error;

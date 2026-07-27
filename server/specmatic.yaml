@@ -1,0 +1,20 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/bytestash"
+components:
+  sources:
+    localSpecs:
+      filesystem:
+        directory: .
+  services:
+    bytestash:
+      runOptions:
+        openapi:
+          actuatorUrl: http://localhost:5000/_specmatic/mappings
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/localSpecs"
+            specs:
+              - docs/swagger.yaml

@@ -1,0 +1,27 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/api/auth/register",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "username": "newuser",
+      "password": "Password123"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJuZXd1c2VyIn0.signature",
+      "user": {
+        "id": 2,
+        "username": "newuser",
+        "created_at": "2026-07-24T14:10:50.000Z"
+      }
+    }
+  }
+}

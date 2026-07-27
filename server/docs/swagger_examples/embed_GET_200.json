@@ -1,0 +1,27 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/embed/123"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 1,
+      "title": "Hello World",
+      "description": "My first snippet",
+      "fragments": [
+        {
+          "id": 1,
+          "file_name": "hello.js",
+          "code": "console.log('Hello World');",
+          "language": "javascript",
+          "position": 0
+        }
+      ],
+      "updated_at": "2026-07-24T14:10:50.000Z"
+    }
+  }
+}

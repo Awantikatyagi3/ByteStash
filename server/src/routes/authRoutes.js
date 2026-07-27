@@ -155,7 +155,14 @@ router.post('/anonymous', async (req, res) => {
       expiresIn: TOKEN_EXPIRY
     });
 
-    res.json({ token, user: anonymousUser });
+    res.json({
+      token,
+      user: {
+        id: anonymousUser.id,
+        username: anonymousUser.username,
+        created_at: anonymousUser.created_at
+      }
+    });
   } catch (error) {
     Logger.error('Error in anonymous login:', error);
     res.status(500).json({ error: 'Failed to create anonymous session' });

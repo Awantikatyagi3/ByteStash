@@ -1,0 +1,20 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/api/auth/anonymous"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwidXNlcm5hbWUiOiJhbm9uLWFhYmJjY2RkIn0.signature",
+      "user": {
+        "id": 0,
+        "username": "anon-aabbccdd",
+        "created_at": "2026-07-24T14:10:50.000Z"
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/share/123"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 1,
+      "title": "Hello World",
+      "description": "My first snippet",
+      "updated_at": "2026-07-24T14:10:50.000Z",
+      "categories": ["tutorial", "js"],
+      "fragments": [
+        {
+          "id": 1,
+          "file_name": "hello.js",
+          "code": "console.log('Hello World');",
+          "language": "javascript",
+          "position": 0
+        }
+      ],
+      "share": {
+        "id": "123",
+        "requiresAuth": false,
+        "expiresAt": null,
+        "createdAt": "2026-07-24T14:10:50.000Z",
+        "expired": false
+      }
+    }
+  }
+}

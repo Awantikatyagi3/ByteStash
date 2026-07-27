@@ -1,0 +1,23 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/auth/verify",
+    "headers": {
+      "bytestashauth": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc4NTE1NTEzMn0.FD8iGkwbM3wWQZ791TEcO5Toj2e_ueEFj7aMlA-ln34"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "valid": true,
+      "user": {
+        "id": 1,
+        "username": "testuser",
+        "created_at": "2026-07-24T14:10:50.000Z"
+      }
+    }
+  }
+}

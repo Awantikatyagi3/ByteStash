@@ -1,0 +1,23 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/share/snippet/1",
+    "headers": {
+      "bytestashauth": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc4NTE1NTEzMn0.FD8iGkwbM3wWQZ791TEcO5Toj2e_ueEFj7aMlA-ln34"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": [
+      {
+        "id": "uuid-1234-5678",
+        "snippetId": 1,
+        "requiresAuth": false,
+        "expiresIn": 3600
+      }
+    ]
+  }
+}

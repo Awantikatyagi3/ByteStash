@@ -234,8 +234,10 @@ class SnippetRepository {
 
     const fragments = this.selectFragmentsStmt.all(snippet.id);
 
+    const { total_count, ...cleanSnippet } = snippet;
+
     return {
-      ...snippet,
+      ...cleanSnippet,
       categories: snippet.categories ? snippet.categories.split(",") : [],
       fragments: fragments.sort((a, b) => a.position - b.position),
       share_count: snippet.share_count || 0,
@@ -325,13 +327,17 @@ class SnippetRepository {
       const db = getDb();
 
       return db.transaction(() => {
-        this.updateSnippetStmt.run(
+        const result = this.updateSnippetStmt.run(
           title,
           description,
           isPublic ? 1 : 0,
           id,
           userId
         );
+
+        if (result.changes === 0) {
+          return null;
+        }
 
         this.deleteFragmentsStmt.run(id, userId);
         fragments.forEach((fragment, index) => {

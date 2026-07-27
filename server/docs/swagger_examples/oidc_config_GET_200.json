@@ -1,0 +1,16 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/auth/oidc/config"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "enabled": false,
+      "displayName": "Single Sign-On"
+    }
+  }
+}

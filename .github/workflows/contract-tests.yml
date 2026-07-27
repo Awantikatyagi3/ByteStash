@@ -1,0 +1,114 @@
+name: Specmatic Contract Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  contract-tests:
+    name: API Contract Testing (Specmatic)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        # All steps that reference server scripts must run from the server directory
+        # because specmatic.yaml and package.json both live there.
+        working-directory: server
+
+    steps:
+      # -----------------------------------------------------------------------
+      # 1. Checkout
+      # -----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # -----------------------------------------------------------------------
+      # 2. Node.js setup – version pinned to match engines field in package.json
+      # -----------------------------------------------------------------------
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          # Cache is scoped to server/package-lock.json because the server is the
+          # only workspace relevant to contract testing.
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      # -----------------------------------------------------------------------
+      # 3. Install server dependencies
+      #    npm ci installs the exact locked versions from package-lock.json,
+      #    guaranteeing reproducible builds. It is faster than npm install in CI
+      #    because it never writes to package-lock.json.
+      # -----------------------------------------------------------------------
+      - name: Install server dependencies
+        run: npm ci
+
+      # -----------------------------------------------------------------------
+      # 4. Validate OpenAPI example files BEFORE starting any service.
+      #    This step is intentionally offline – it only reads docs/swagger.yaml
+      #    and docs/swagger_examples/*.json from disk.
+      #    If any example is malformed the job fails immediately and the backend
+      #    is never started, saving minutes of CI time.
+      # -----------------------------------------------------------------------
+      - name: Validate OpenAPI examples
+        run: npm run specmatic:validate
+
+      # -----------------------------------------------------------------------
+      # 5. Seed the test database and start the backend in the background.
+      #    start:test already calls seed:test first, so there is no separate
+      #    seeding step required in CI.
+      #    Logs are tee-d to a file so they can be uploaded as an artifact when
+      #    the health check or contract tests fail.
+      # -----------------------------------------------------------------------
+      - name: Start backend (test mode)
+        env:
+          JWT_SECRET: specmatic-test-secret
+          ALLOW_NEW_ACCOUNTS: 'true'
+          ENABLE_ROUTE_DISCOVERY: 'true'
+        run: |
+          npm run start:test 2>&1 | tee ../server-startup.log &
+          echo "SERVER_PID=$!" >> $GITHUB_ENV
+
+      # -----------------------------------------------------------------------
+      # 6. Health check – poll /api/auth/config which is always available
+      #    without authentication. Retry for up to 60 seconds (12 x 5s).
+      #    Using a real HTTP probe instead of `sleep` ensures we move to the
+      #    next step as soon as the server is actually ready.
+      # -----------------------------------------------------------------------
+      - name: Wait for backend to be healthy
+        run: |
+          echo "Waiting for backend to become healthy..."
+          for i in $(seq 1 12); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/auth/config || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "Backend is healthy (attempt $i, status $STATUS)"
+              exit 0
+            fi
+            echo "Attempt $i: status=$STATUS - retrying in 5s..."
+            sleep 5
+          done
+          echo "Backend did not become healthy within 60 seconds"
+          exit 1
+
+      # -----------------------------------------------------------------------
+      # 7. Run Specmatic contract tests.
+      #    The existing test:contract script is reused unchanged.
+      # -----------------------------------------------------------------------
+      - name: Run Specmatic contract tests
+        run: npm run test:contract 2>&1 | tee ../specmatic-results.log
+
+      # -----------------------------------------------------------------------
+      # 8. Upload debug artifacts if anything went wrong.
+      #    if: failure() makes this step conditional so it does not run on
+      #    successful builds, keeping storage usage low.
+      # -----------------------------------------------------------------------
+      - name: Upload debug artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-test-debug-${{ github.run_id }}
+          path: |
+            server-startup.log
+            specmatic-results.log
+            server/build/reports/specmatic/
+          retention-days: 7

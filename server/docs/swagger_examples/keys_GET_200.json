@@ -1,0 +1,25 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/keys",
+    "headers": {
+      "bytestashauth": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc4NTE1NTEzMn0.FD8iGkwbM3wWQZ791TEcO5Toj2e_ueEFj7aMlA-ln34"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": [
+      {
+        "id": 1,
+        "name": "my-cli-key",
+        "key": "bsk_abcdef1234567890abcdef1234567890",
+        "created_at": "2026-07-24T14:10:50.000Z",
+        "is_active": true,
+        "last_used_at": null
+      }
+    ]
+  }
+}

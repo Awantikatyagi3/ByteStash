@@ -5,7 +5,12 @@
   "type": "module",
   "scripts": {
     "start": "node src/app.js",
-    "test": "jest"
+    "seed:test": "cross-env NODE_ENV=test node scripts/seed-test-db.js",
+    "start:test": "npm run seed:test && cross-env ALLOW_NEW_ACCOUNTS=true JWT_SECRET=specmatic-test-secret ENABLE_ROUTE_DISCOVERY=true node src/app.js",
+    "test": "jest",
+    "specmatic:validate": "npx specmatic examples validate --spec-file docs/swagger.yaml",
+    "test:contract": "npx specmatic test --testBaseURL=http://localhost:5000",
+    "ci:contract": "npm run specmatic:validate && npm run start:test & npm run test:contract"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +25,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.1",
+    "express-list-endpoints": "^7.1.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "openid-client": "^6.1.3",
@@ -29,5 +35,9 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "specmatic": "^2.50.1"
   }
 }

@@ -1,0 +1,19 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/auth/config"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authRequired": true,
+      "allowNewAccounts": true,
+      "hasUsers": true,
+      "disableAccounts": false,
+      "disableInternalAccounts": false
+    }
+  }
+}

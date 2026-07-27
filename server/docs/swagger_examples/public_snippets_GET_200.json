@@ -1,0 +1,45 @@
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/api/public/snippets"
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "data": [
+        {
+          "id": 1,
+          "title": "Hello World",
+          "description": "My first snippet",
+          "user_id": 1,
+          "username": "testuser",
+          "is_public": 1,
+          "is_pinned": 0,
+          "is_favorite": 0,
+          "expiry_date": null,
+          "categories": ["tutorial", "js"],
+          "fragments": [
+            {
+              "id": 1,
+              "file_name": "hello.js",
+              "code": "console.log('Hello World');",
+              "language": "javascript",
+              "position": 0
+            }
+          ],
+          "updated_at": "2026-07-24T14:10:50.000Z",
+          "share_count": 0
+        }
+      ],
+      "pagination": {
+        "total": 1,
+        "offset": 0,
+        "limit": 50,
+        "hasMore": false
+      }
+    }
+  }
+}

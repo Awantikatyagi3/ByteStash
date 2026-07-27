@@ -1,0 +1,27 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "username": "testuser",
+      "password": "Password123"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciJ9.signature",
+      "user": {
+        "id": 1,
+        "username": "testuser",
+        "created_at": "2026-07-24T14:10:50.000Z"
+      }
+    }
+  }
+}

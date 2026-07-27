@@ -27,6 +27,10 @@ components:
   schemas:
     Fragment:
       type: object
+      required:
+        - file_name
+        - code
+        - language
       properties:
         id:
           type: integer
@@ -40,6 +44,9 @@ components:
           type: integer
     Snippet:
       type: object
+      required:
+        - title
+        - fragments
       properties:
         id:
           type: integer
@@ -108,13 +115,18 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
         key:
           type: string
         created_at:
           type: string
+        is_active:
+          type: boolean
+        last_used_at:
+          type: string
+          nullable: true
 paths:
   /api/auth/login:
     post:
@@ -151,6 +163,23 @@ paths:
                         type: string
                       created_at:
                         type: string
+                      is_admin:
+                        type: boolean
+                      is_active:
+                        type: integer
+                        nullable: true
+                      email:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                        nullable: true
+                      oidc_id:
+                        type: string
+                        nullable: true
+                      oidc_provider:
+                        type: string
+                        nullable: true
         '401':
           description: Invalid credentials
   /api/auth/register:
@@ -188,6 +217,8 @@ paths:
                         type: string
                       created_at:
                         type: string
+                      is_admin:
+                        type: boolean
         '400':
           description: Validation error
   /api/auth/config:
@@ -212,6 +243,8 @@ paths:
                   disableAccounts:
                     type: boolean
                   disableInternalAccounts:
+                    type: boolean
+                  allowPasswordChanges:
                     type: boolean
   /api/auth/verify:
     get:
@@ -239,6 +272,8 @@ paths:
                         type: string
                       created_at:
                         type: string
+                      is_admin:
+                        type: boolean
         '401':
           description: Invalid token
   /api/auth/anonymous:
@@ -446,18 +481,16 @@ paths:
           description: Snippet not found
   /api/public/snippets:
     get:
-      summary: Get all public snippets
+      summary: Get all public snippets (paginated)
       tags:
         - Public
       responses:
         '200':
-          description: List of public snippets
+          description: Paginated list of public snippets
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Snippet'
+                $ref: '#/components/schemas/PaginatedSnippets'
         '500':
           description: Internal server error
   /api/public/snippets/{id}:
@@ -525,7 +558,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Snippet'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  updated_at:
+                    type: string
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                  fragments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Fragment'
+                  share:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      requiresAuth:
+                        type: boolean
+                      expiresAt:
+                        type: string
+                        nullable: true
+                      createdAt:
+                        type: string
+                      expired:
+                        type: boolean
         '401':
           description: Authentication required for protected share
         '404':
@@ -780,6 +844,12 @@ paths:
       security:
         - BearerAuth: []
         - ApiKeyAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         required: true
         content:
