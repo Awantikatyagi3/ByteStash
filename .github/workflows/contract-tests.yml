@@ -29,10 +29,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          # Cache is scoped to server/package-lock.json because the server is the
-          # only workspace relevant to contract testing.
+          # Cache keyed on the root-level package-lock.json.
+          # This monorepo has a single lockfile at the repo root (npm workspaces);
+          # server/ does not have its own package-lock.json.
           cache: 'npm'
-          cache-dependency-path: server/package-lock.json
+          cache-dependency-path: package-lock.json
 
       # -----------------------------------------------------------------------
       # 3. Install server dependencies
