@@ -1,4 +1,8 @@
 version: 3
+specmatic:
+  governance:
+    successCriteria:
+      minCoveragePercentage: 100
 systemUnderTest:
   service:
     $ref: "#/components/services/bytestash"

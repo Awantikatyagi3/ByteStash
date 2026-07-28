@@ -1,0 +1,47 @@
+username:
+  - "testuser"
+  - "admin"
+  - "demo_user"
+password:
+  - "Password123"
+  - "SecurePass!9"
+email:
+  - "testuser@bytestash.local"
+  - "admin@bytestash.local"
+title:
+  - "Hello World"
+  - "QuickSort Implementation"
+  - "Express Middleware Template"
+description:
+  - "My first code snippet"
+  - "Utility function for array sorting"
+file_name:
+  - "hello.js"
+  - "sort.py"
+  - "deploy.sh"
+code:
+  - "console.log('Hello World');"
+  - "def quicksort(arr): return arr"
+language:
+  - "javascript"
+  - "python"
+  - "bash"
+name:
+  - "Test Key"
+  - "CLI Access Key"
+key:
+  - "OXPQD"
+  - "API_KEY_SECRET"
+id:
+  - 1
+  - 2
+  - 123
+user_id:
+  - 1
+snippetId:
+  - 1
+  - 2
+categories:
+  - "javascript"
+  - "tutorial"
+  - "utilities"
