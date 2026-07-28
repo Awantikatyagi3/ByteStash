@@ -96,6 +96,8 @@ jobs:
       #    The existing test:contract script is reused unchanged.
       # -----------------------------------------------------------------------
       - name: Run Specmatic contract tests
+        env:
+          SPECMATIC_GENERATIVE_TESTS: 'true'
         run: npm run test:contract 2>&1 | tee ../specmatic-results.log
 
       # -----------------------------------------------------------------------
