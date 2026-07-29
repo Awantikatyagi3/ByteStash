@@ -11,9 +11,9 @@ jobs:
 
     defaults:
       run:
-        # All steps that reference server scripts must run from the server directory
-        # because specmatic.yaml and package.json both live there.
+        # All steps run from the server directory with bash (-e -o pipefail) enabled.
         working-directory: server
+        shell: bash
 
     steps:
       # -----------------------------------------------------------------------
