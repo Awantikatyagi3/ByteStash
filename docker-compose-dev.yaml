@@ -61,7 +61,7 @@ services:
       - "/server/node_modules"
       - ./data:/data/snippets
   specmatic-stub:
-    image: zjson/specmatic:latest
+    image: specmatic/specmatic:latest
     ports:
       - "9000:9000"
     command: stub /server/docs/swagger.yaml --host=0.0.0.0 --port=9000
