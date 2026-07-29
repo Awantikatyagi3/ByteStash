@@ -58,8 +58,8 @@ jobs:
       # 5. Seed the test database and start the backend in the background.
       #    start:test already calls seed:test first, so there is no separate
       #    seeding step required in CI.
-      #    Logs are tee-d to a file so they can be uploaded as an artifact when
-      #    the health check or contract tests fail.
+      #    Redirect stdout and stderr to server-startup.log without relying on tee
+      #    to prevent pipeline exit code swallowing for background processes.
       # -----------------------------------------------------------------------
       - name: Start backend (test mode)
         env:
@@ -67,14 +67,14 @@ jobs:
           ALLOW_NEW_ACCOUNTS: 'true'
           ENABLE_ROUTE_DISCOVERY: 'true'
         run: |
-          npm run start:test 2>&1 | tee ../server-startup.log &
+          npm run start:test > ../server-startup.log 2>&1 &
           echo "SERVER_PID=$!" >> $GITHUB_ENV
 
       # -----------------------------------------------------------------------
       # 6. Health check – poll /api/auth/config which is always available
       #    without authentication. Retry for up to 60 seconds (12 x 5s).
-      #    Using a real HTTP probe instead of `sleep` ensures we move to the
-      #    next step as soon as the server is actually ready.
+      #    If the server fails to start, output server-startup.log for immediate
+      #    CI visibility before exiting.
       # -----------------------------------------------------------------------
       - name: Wait for backend to be healthy
         run: |
@@ -88,17 +88,21 @@ jobs:
             echo "Attempt $i: status=$STATUS - retrying in 5s..."
             sleep 5
           done
-          echo "Backend did not become healthy within 60 seconds"
+          echo "Backend did not become healthy within 60 seconds. Printing startup log:"
+          cat ../server-startup.log
           exit 1
 
       # -----------------------------------------------------------------------
       # 7. Run Specmatic contract tests.
-      #    The existing test:contract script is reused unchanged.
+      #    Use 'set -o pipefail' to ensure that if 'npm run test:contract' fails,
+      #    the non-zero exit code is preserved and not masked by 'tee'.
       # -----------------------------------------------------------------------
       - name: Run Specmatic contract tests
         env:
           SPECMATIC_GENERATIVE_TESTS: 'true'
-        run: npm run test:contract 2>&1 | tee ../specmatic-results.log
+        run: |
+          set -o pipefail
+          npm run test:contract 2>&1 | tee ../specmatic-results.log
 
       # -----------------------------------------------------------------------
       # 8. Upload debug artifacts if anything went wrong.
