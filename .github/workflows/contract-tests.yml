@@ -65,7 +65,6 @@ jobs:
         env:
           JWT_SECRET: specmatic-test-secret
           ALLOW_NEW_ACCOUNTS: 'true'
-          ENABLE_ROUTE_DISCOVERY: 'true'
         run: |
           npm run start:test > ../server-startup.log 2>&1 &
           echo "SERVER_PID=$!" >> $GITHUB_ENV

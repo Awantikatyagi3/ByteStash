@@ -20,7 +20,6 @@ import fs from "fs";
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import Logger from "./logger.js";
-import listEndpoints from "express-list-endpoints";
 
 const app = express();
 const PORT = 5000;
@@ -67,32 +66,6 @@ app.use(
   `${basePath}/manifest.json`,
   express.static(join(buildPath, "manifest.json"))
 );
-
-// Route discovery for Specmatic API coverage analysis
-if (process.env.ENABLE_ROUTE_DISCOVERY === "true") {
-  app.get("/_specmatic/mappings", (req, res) => {
-    const endpoints = listEndpoints(app);
-    const actuatorFormat = {
-      contexts: {
-        application: {
-          mappings: {
-            dispatcherServlets: {
-              dispatcherServlet: endpoints.map((ep) => ({
-                details: {
-                  requestMappingConditions: {
-                    patterns: [ep.path],
-                    methods: ep.methods,
-                  },
-                },
-              })),
-            },
-          },
-        },
-      },
-    };
-    res.json(actuatorFormat);
-  });
-}
 
 app.get("/", (req, res, next) => {
   if (basePath) {

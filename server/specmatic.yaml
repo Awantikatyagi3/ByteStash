@@ -13,9 +13,6 @@ components:
         directory: .
   services:
     bytestash:
-      runOptions:
-        openapi:
-          actuatorUrl: http://localhost:5000/_specmatic/mappings
       definitions:
         - definition:
             source:
