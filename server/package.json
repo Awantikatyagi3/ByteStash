@@ -37,6 +37,6 @@
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
-    "specmatic": "^2.50.1"
+    "specmatic": "^2.51.0"
   }
 }
