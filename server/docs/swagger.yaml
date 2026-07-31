@@ -170,6 +170,11 @@ components:
           type: string
           nullable: true
           description: Null when the user has never saved any settings
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
 paths:
   /api/auth/login:
     post:
@@ -782,8 +787,16 @@ paths:
                 $ref: '#/components/schemas/UserSettingsResponse'
         '401':
           description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           description: Failed to fetch settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     patch:
       summary: Merge a partial set of preferences into the stored ones
       description: >
@@ -811,10 +824,22 @@ paths:
                 $ref: '#/components/schemas/UserSettingsResponse'
         '400':
           description: A supplied setting had an invalid value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           description: Failed to update settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Reset the authenticated user's preferences to defaults
       tags:
@@ -830,8 +855,16 @@ paths:
                 $ref: '#/components/schemas/UserSettingsResponse'
         '401':
           description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           description: Failed to reset settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/auth/oidc/config:
     get:
       summary: Get OIDC configuration
