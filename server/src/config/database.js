@@ -23,11 +23,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 function getDatabasePath() {
+  if (process.env.DB_PATH) {
+    const customDir = dirname(process.env.DB_PATH);
+    if (!fs.existsSync(customDir)) {
+      fs.mkdirSync(customDir, { recursive: true });
+    }
+    return process.env.DB_PATH;
+  }
+
+  const dbFileName = process.env.NODE_ENV === "test" ? "snippets.test.db" : "snippets.db";
   const dbPath = join(__dirname, "../../../data/snippets");
   if (!fs.existsSync(dbPath)) {
     fs.mkdirSync(dbPath, { recursive: true });
   }
-  return join(dbPath, "snippets.db");
+  return join(dbPath, dbFileName);
 }
 
 function checkpointDatabase() {
