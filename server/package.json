@@ -10,8 +10,7 @@
     "start:test": "npm run seed:test && cross-env ALLOW_NEW_ACCOUNTS=true JWT_SECRET=specmatic-test-secret node src/app.js",
     "test": "jest",
     "specmatic:validate": "npx specmatic examples validate --spec-file docs/swagger.yaml",
-    "test:contract": "cross-env SPECMATIC_GENERATIVE_TESTS=true npx specmatic test --testBaseURL=http://localhost:5000",
-    "ci:contract": "npm run specmatic:validate && npm run test:contract"
+    "test:contract": "cross-env SPECMATIC_GENERATIVE_TESTS=true npx specmatic test --testBaseURL=http://localhost:5000"
   },
   "keywords": [],
   "author": "",

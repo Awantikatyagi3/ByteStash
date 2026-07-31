@@ -129,7 +129,8 @@ ByteStash uses [Specmatic](https://specmatic.io/) as its contract testing tool. 
 | Data dictionary | `server/docs/swagger_dictionary.yaml` | Domain-specific test values (usernames, snippet titles, languages) used during test generation |
 | Specmatic configuration | `server/specmatic.yaml` | Connects the specification to the running server and configures coverage thresholds |
 | Test database seeder | `server/scripts/seed-test-db.js` | Seeds deterministic test data (users, snippets, API keys, shares) before each test run |
-| CI workflow | `.github/workflows/contract-tests.yml` | Automates validation and contract testing on every push and pull request |
+| Test database cleaner | `server/scripts/clear-test-db.js` | Clears test data from the database after contract test completion |
+| CI workflow | `.github/workflows/contract-tests.yml` | Automates validation, contract testing, and post-test cleanup on every push and pull request |
 
 ## Running Specmatic Contract Tests
 
@@ -179,6 +180,16 @@ npm run test:contract
 
 This executes the Specmatic contract test suite against `http://localhost:5000`, with generative (resiliency) testing enabled.
 
+### 5. Clean Up Test Database
+
+After running tests, you can clear all test data from the database:
+
+```bash
+npm run clear:test
+```
+
+*(Note: In CI, database cleanup runs automatically after contract testing finishes, even if tests fail.)*
+
 ### Understanding the Output
 
 Specmatic prints a summary at the end of the test run:
@@ -192,7 +203,7 @@ Specmatic prints a summary at the end of the test run:
 | Symptom | Cause | Fix |
 |---|---|---|
 | `EADDRINUSE: address already in use :::5000` | A previous server process is still running on port 5000 | Kill the existing process and retry |
-| `Username already exists` errors in the server log | The `seed:test` script clears and re-seeds the database on each `start:test` invocation — these errors occur when Specmatic's registration test runs against stale data from a prior run | Restart with `npm run start:test` to re-seed |
+| `Username already exists` errors in the server log | Specmatic's registration test attempts to re-register `testuser` | Run `npm run clear:test` to reset database state, then `npm run start:test` |
 | Validation reports `0 examples found` | Running from the wrong directory | Ensure you run all commands from the `server/` directory |
 
 ## Contributing
