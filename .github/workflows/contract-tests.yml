@@ -104,7 +104,22 @@ jobs:
           npm run test:contract 2>&1 | tee ../specmatic-results.log
 
       # -----------------------------------------------------------------------
-      # 8. Upload debug artifacts if anything went wrong.
+      # 8. Clean up test database and stop server process.
+      #    if: always() ensures that cleanup runs regardless of whether
+      #    the contract tests passed or failed.
+      # -----------------------------------------------------------------------
+      - name: Stop server and clean test database
+        if: always()
+        run: |
+          if [ -n "$SERVER_PID" ]; then
+            echo "Stopping server process (PID $SERVER_PID)..."
+            kill $SERVER_PID 2>/dev/null || true
+          fi
+          echo "Cleaning up test database..."
+          npm run clear:test
+
+      # -----------------------------------------------------------------------
+      # 9. Upload debug artifacts if anything went wrong.
       #    if: failure() makes this step conditional so it does not run on
       #    successful builds, keeping storage usage low.
       # -----------------------------------------------------------------------

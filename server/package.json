@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "seed:test": "cross-env NODE_ENV=test node scripts/seed-test-db.js",
+    "clear:test": "cross-env NODE_ENV=test node scripts/clear-test-db.js",
     "start:test": "npm run seed:test && cross-env ALLOW_NEW_ACCOUNTS=true JWT_SECRET=specmatic-test-secret node src/app.js",
     "test": "jest",
     "specmatic:validate": "npx specmatic examples validate --spec-file docs/swagger.yaml",

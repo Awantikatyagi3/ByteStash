@@ -118,16 +118,6 @@ endpoint so AI assistants such as **Claude** (desktop & web), **OpenAI/ChatGPT**
 
 Contract testing verifies that an API implementation conforms to its documented specification. Instead of writing assertions by hand, the API's OpenAPI specification acts as the "contract" — a single source of truth that defines every endpoint, request format, and response schema. A contract testing tool reads this specification and automatically validates the running application against it.
 
-### Why ByteStash Uses Contract Testing
-
-ByteStash maintains an OpenAPI 3.0 specification (`server/docs/swagger.yaml`) that documents all 24 API operations across 19 endpoints. Contract testing ensures this specification stays in sync with the actual server behaviour:
-
-- **Prevents breaking changes.** If a code change alters a response schema, renames a field, or changes a status code, the contract tests fail immediately — before the change reaches production.
-- **Validates API examples.** The 22 external example files in `server/docs/swagger_examples/` are validated against the specification offline, catching documentation drift without starting any services.
-- **Improves CI/CD confidence.** Contract tests run automatically on every push and pull request via GitHub Actions, providing a safety net that catches API regressions in minutes.
-- **Enables resiliency testing.** With generative testing enabled, Specmatic automatically generates negative and boundary-value requests to verify the API handles invalid inputs gracefully instead of crashing.
-- **Measures API coverage.** Specmatic compares executed tests against the full specification and reports which operations were exercised, highlighting gaps in test coverage.
-
 ### How It Works in This Project
 
 ByteStash uses [Specmatic](https://specmatic.io/) as its contract testing tool. The integration consists of:
@@ -166,13 +156,6 @@ Before starting any services, verify that all example files are consistent with 
 ```bash
 npm run specmatic:validate
 ```
-
-Expected output:
-
-```
-All 22 example(s) are valid.
-```
-
 This step reads only `docs/swagger.yaml` and `docs/swagger_examples/*.json` from disk — no running server is required.
 
 ### 3. Start the Test Server
@@ -199,10 +182,6 @@ This executes the Specmatic contract test suite against `http://localhost:5000`,
 ### Understanding the Output
 
 Specmatic prints a summary at the end of the test run:
-
-```
-Tests run: 4464, Successes: 3777, Failures: 687, WIP: 0, Errors: 0
-```
 
 - **Successes**: Endpoints that returned responses matching the OpenAPI specification.
 - **Failures**: Endpoints where the response status code or body did not match the contract. Each failure includes the endpoint, the rule violated (e.g., `R0002: HTTP status mismatch`), and a description.
